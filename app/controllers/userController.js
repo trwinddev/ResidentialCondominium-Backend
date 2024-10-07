@@ -24,37 +24,37 @@ const userController = {
         try {
             const inputEmail = req.body.email;
             const inputPhone = req.body.phone;
-    
+
             // Check if email already exists
             const [checkEmailExist] = await db.execute('SELECT * FROM users WHERE email = ?', [inputEmail]);
             if (checkEmailExist.length > 0) {
                 return res.status(200).json("User with this email already exists");
             }
-    
+
             // Check if phone already exists
             const [checkPhoneExist] = await db.execute('SELECT * FROM users WHERE phone = ?', [inputPhone]);
             if (checkPhoneExist.length > 0) {
                 return res.status(200).json("User with this phone number already exists");
             }
-    
+
             const salt = await bcrypt.genSalt(10);
             const hashed = await bcrypt.hash(req.body.password, salt);
-    
+
             const { email, phone, username, role, status } = req.body;
-    
+
             const values = [email || null, phone || null, username || null, hashed || null, role || null, status || null];
-    
+
             const query = 'INSERT INTO users (email, phone, username, password, role, status) VALUES (?, ?, ?, ?, ?, ?)';
-    
+
             const [result] = await db.execute(query, values);
             const userId = result.insertId;
-    
+
             res.status(200).json({ id: userId, email, phone, username, role, status });
         } catch (err) {
             res.status(500).json(err);
         }
     },
-    
+
 
 
     deleteUser: async (req, res) => {
@@ -117,18 +117,18 @@ const userController = {
 
     searchUserByEmail: async (req, res) => {
         const email = req.query.email;
-    
+
         try {
             const query = 'SELECT * FROM users WHERE email LIKE ?';
             const searchTerm = `%${email}%`;
-    
+
             const [userList] = await db.execute(query, [searchTerm]);
             res.status(200).json({ data: userList });
         } catch (err) {
             res.status(500).json({ message: err.message });
         }
     },
-    
+
 
     getProfile: async (req, res) => {
         jwt.verify(req.headers.authorization, _const.JWT_ACCESS_KEY, async (err, decodedToken) => {
@@ -139,14 +139,14 @@ const userController = {
                     const userId = decodedToken.user.id;
 
                     console.log(decodedToken)
-    
+
                     // Thực hiện truy vấn để lấy thông tin người dùng dựa trên userId
-                    const [user] = await db.execute('SELECT * FROM users WHERE id = ?', [userId]);
-    
+                    const [user] = await db.execute('SELECT id, email, phone, username, role, status, image FROM users WHERE id = ?', [userId]);
+
                     if (user.length === 0) {
                         return res.status(404).json({ message: 'User not found' });
                     }
-    
+
                     // Trả về thông tin người dùng theo định dạng yêu cầu
                     const formattedUser = {
                         user: {
@@ -164,7 +164,7 @@ const userController = {
                         iat: decodedToken.iat,
                         exp: decodedToken.exp
                     };
-    
+
                     res.status(200).json(formattedUser);
                 } catch (err) {
                     console.log(err);
@@ -173,7 +173,7 @@ const userController = {
             }
         });
     },
-    
+
 
     updateProfile: async (req, res) => {
         try {
