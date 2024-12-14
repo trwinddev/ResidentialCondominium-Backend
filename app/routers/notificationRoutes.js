@@ -1,8 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const notificationController = require('../controllers/notificationController'); // Import notificationController
+const verifyToken = require('../utils/middleware');
+
 
 router.get('/', notificationController.getAllNotifications);
+router.get("/searchByName", verifyToken.checkLogin, notificationController.searchNotificationByName);
+
 
 // Endpoint để tạo thông báo
 router.post('/', notificationController.createNotification);

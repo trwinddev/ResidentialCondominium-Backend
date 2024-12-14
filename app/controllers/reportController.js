@@ -6,7 +6,7 @@ const reportController = {
         try {
             const { assetId, reportDate, reportDescription, fileUrl } = req.body;
 
-            // Thực hiện truy vấn SQL để thêm báo cáo tài sản vào bảng "asset_reports" với trường file_url
+            // Thực hiện truy vấn SQL để thêm báo cáo thiết bị vào bảng "asset_reports" với trường file_url
             const query = 'INSERT INTO asset_reports (asset_id, report_date, report_description, file_url) VALUES (?, ?, ?, ?)';
             const [result] = await db.execute(query, [assetId, reportDate, reportDescription, fileUrl]);
             const reportId = result.insertId;
@@ -18,14 +18,14 @@ const reportController = {
 
     getAssetReports: async (req, res) => {
         try {
-            // Thực hiện truy vấn SQL để lấy toàn bộ thông tin của báo cáo tài sản từ bảng "asset_reports" và tên của asset
+            // Thực hiện truy vấn SQL để lấy toàn bộ thông tin của báo cáo thiết bị từ bảng "asset_reports" và tên của asset
             const query = `
                 SELECT ar.*, assets.*
                 FROM asset_reports ar
                 JOIN assets ON ar.asset_id = assets.id
             `;
             const [reports] = await db.execute(query);
-    
+
             res.status(200).json({ data: reports });
         } catch (err) {
             res.status(500).json(err);
@@ -37,7 +37,7 @@ const reportController = {
             // Lấy tham số từ request, ví dụ: năm và tháng
             const { year, month } = req.query;
 
-            // Thực hiện truy vấn SQL để tính thống kê tài sản dựa trên năm và tháng
+            // Thực hiện truy vấn SQL để tính thống kê thiết bị dựa trên năm và tháng
             const query = `
                 SELECT
                     ${year} AS year,
@@ -65,7 +65,7 @@ const reportController = {
         try {
             const { name } = req.query;
 
-            // Thực hiện truy vấn SQL để tìm kiếm tài sản theo tên trong bảng asset_reports
+            // Thực hiện truy vấn SQL để tìm kiếm thiết bị theo tên trong bảng asset_reports
             const query = `
                 SELECT ar.*, assets.*
                 FROM asset_reports ar

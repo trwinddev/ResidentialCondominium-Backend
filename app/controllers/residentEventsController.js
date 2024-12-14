@@ -39,11 +39,11 @@ const residentEventsController = {
 
             // Gửi thông báo tới cư dân tham gia cuộc họp
             const transporter = nodemailer.createTransport({
-                host: 'smtp-relay.brevo.com',
-                port: '587',
+                host: 'smtp.gmail.com',
+                port: '465',
                 auth: {
-                    user: 'h5studiogl@gmail.com',
-                    pass: 'fScdnZ4WmEDqjBA1',
+                    user: 'thanhphongit217@gmail.com',
+                    pass: 'ktubfwktjlnkulgl',
                 },
             });
 
@@ -76,30 +76,30 @@ const residentEventsController = {
         try {
             // Lấy thông tin sự kiện từ req.body
             const { eventName, eventDate, description, meetingId, fileUrl } = req.body;
-    
+
             // Lưu thông tin sự kiện vào cơ sở dữ liệu với trường file_url
             const [eventRows] = await db.execute(
                 'INSERT INTO events (event_name, event_date, description, meeting_id, file_url) VALUES (?, ?, ?, ?, ?)',
                 [eventName, eventDate, description, meetingId, fileUrl]
             );
-    
+
             const eventId = eventRows.insertId;
-    
+
             // Gửi thông báo tới cư dân về sự kiện
             const transporter = nodemailer.createTransport({
-                host: 'smtp-relay.brevo.com',
-                port: '587',
+                host: 'smtp.gmail.com',
+                port: '465',
                 auth: {
-                    user: 'h5studiogl@gmail.com',
-                    pass: 'fScdnZ4WmEDqjBA1',
+                    user: 'thanhphongit217@gmail.com',
+                    pass: 'ktubfwktjlnkulgl',
                 },
             });
-    
+
             // Lấy danh sách cư dân để gửi thông báo
             const [residentsRows] = await db.execute('SELECT email FROM users WHERE role = "resident"');
-    
+
             const residentEmails = residentsRows.map((resident) => resident.email);
-    
+
             // Include fileUrl in the email text
             const mailOptions = {
                 from: 'coms@gmail.com',
@@ -107,13 +107,13 @@ const residentEventsController = {
                 subject: `Thông báo sự kiện: ${eventName}`,
                 text: `Sự kiện "${eventName}" diễn ra vào ngày ${eventDate}. Tổng kết nội dung sự kiện ở đường dẫn sau: ${fileUrl}`,
             };
-    
+
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
                     console.error(error);
                 }
             });
-    
+
             res.status(201).json({ message: 'Event recorded successfully', eventId, status: true });
         } catch (err) {
             console.error(err);
@@ -146,7 +146,7 @@ const residentEventsController = {
                 'SELECT * FROM events WHERE meeting_id = ? AND event_name LIKE ?',
                 [meetingId, `%${req.query.eventName || ''}%`]
             );
-    
+
             res.status(200).json({ data: eventRows });
         } catch (err) {
             console.error(err);
@@ -175,12 +175,12 @@ const residentEventsController = {
 
             // Gửi thông báo cho người dùng
             const transporter = nodemailer.createTransport({
-                host: 'smtp-relay.brevo.com',
-                port: '587',
+                host: 'smtp.gmail.com',
+                port: '465',
                 auth: {
-                    user: 'h5studiogl@gmail.com',
-                    pass: 'fScdnZ4WmEDqjBA1',
-                }
+                    user: 'thanhphongit217@gmail.com',
+                    pass: 'ktubfwktjlnkulgl',
+                },
             });
 
             const [meetingInfo] = meetingRows;
@@ -260,19 +260,19 @@ const residentEventsController = {
     searchMeetingsByTitle: async (req, res) => {
         try {
             const { title } = req.query;
-    
+
             const [meetings] = await db.execute(
                 'SELECT * FROM meetings WHERE title LIKE ? OR description LIKE ?',
                 [`%${title}%`, `%${title}%`]
             );
-    
+
             res.status(200).json(meetings);
         } catch (err) {
             console.error(err);
             res.status(500).json(err);
         }
     }
-    
+
 
 };
 

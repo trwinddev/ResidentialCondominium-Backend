@@ -15,16 +15,16 @@ const assetCategoryController = {
     createAssetCategory: async (req, res) => {
         try {
             const { name, description } = req.body;
-    
-            // Kiểm tra xem tên loại tài sản đã tồn tại chưa
+
+            // Kiểm tra xem tên loại thiết bị đã tồn tại chưa
             const checkQuery = 'SELECT * FROM asset_categories WHERE name = ?';
             const [checkResult] = await db.execute(checkQuery, [name]);
-    
+
             if (checkResult.length > 0) {
                 // Nếu tên đã tồn tại, trả về lỗi
-                return res.status(200).json({ error: 'Tên loại tài sản đã tồn tại.' });
+                return res.status(200).json({ error: 'Tên loại thiết bị đã tồn tại.' });
             }
-    
+
             // Nếu tên chưa tồn tại, thêm vào cơ sở dữ liệu
             const insertQuery = 'INSERT INTO asset_categories (name, description) VALUES (?, ?)';
             const [result] = await db.execute(insertQuery, [name, description]);
@@ -35,7 +35,7 @@ const assetCategoryController = {
             res.status(500).json({ error: 'Đã xảy ra lỗi server.' });
         }
     },
-    
+
 
     deleteAssetCategory: async (req, res) => {
         try {
@@ -60,18 +60,18 @@ const assetCategoryController = {
         try {
             const assetCategoryId = req.params.id;
             const { name, description } = req.body;
-    
-            // Kiểm tra xem tên loại tài sản đã tồn tại chưa (nếu có thay đổi về tên)
+
+            // Kiểm tra xem tên loại thiết bị đã tồn tại chưa (nếu có thay đổi về tên)
             if (name) {
                 const checkQuery = 'SELECT * FROM asset_categories WHERE name = ? AND id != ?';
                 const [checkResult] = await db.execute(checkQuery, [name, assetCategoryId]);
-    
+
                 if (checkResult.length > 0) {
                     // Nếu tên đã tồn tại, trả về lỗi
-                    return res.status(200).json({ error: 'Tên loại tài sản đã tồn tại.' });
+                    return res.status(200).json({ error: 'Tên loại thiết bị đã tồn tại.' });
                 }
             }
-    
+
             const query = 'UPDATE asset_categories SET name = ?, description = ? WHERE id = ?';
             await db.execute(query, [name, description, assetCategoryId]);
             res.status(200).json({ message: 'Asset category updated successfully' });
@@ -95,14 +95,14 @@ const assetCategoryController = {
     getAssetCategoryById: async (req, res) => {
         try {
           const categoryId = req.params.id;
-    
+
           const query = 'SELECT id, name, description FROM asset_categories WHERE id = ?';
           const [category] = await db.execute(query, [categoryId]);
-    
+
           if (category.length === 0) {
             return res.status(404).json({ message: 'Asset category not found' });
           }
-    
+
           res.status(200).json({ data: category[0] });
         } catch (err) {
           res.status(500).json(err);

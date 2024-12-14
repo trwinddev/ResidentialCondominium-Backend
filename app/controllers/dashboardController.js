@@ -11,7 +11,7 @@ const dashboardController = {
             const [roomCountResult] = await db.execute('SELECT COUNT(*) AS roomCount FROM rooms');
             const roomCount = roomCountResult[0].roomCount;
 
-            // Tính tổng giá trị của tất cả tài sản
+            // Tính tổng giá trị của tất cả thiết bị
             const [totalAssetsValueResult] = await db.execute('SELECT SUM(value) AS totalValue FROM assets');
             const totalAssetsValue = totalAssetsValueResult[0].totalValue || 0;
 
@@ -19,7 +19,7 @@ const dashboardController = {
             const [contractCountResult] = await db.execute('SELECT COUNT(*) AS contractCount FROM contracts');
             const contractCount = contractCountResult[0].contractCount;
 
-            // Lấy tổng số lượng các bản ghi sự kiện từ lịch sử sự kiện của tài sản
+            // Lấy tổng số lượng các bản ghi sự kiện từ lịch sử sự kiện của thiết bị
             const [eventHistoryCountResult] = await db.execute('SELECT COUNT(*) AS eventHistoryCount FROM asset_event_history');
             const eventHistoryCount = eventHistoryCountResult[0].eventHistoryCount;
 

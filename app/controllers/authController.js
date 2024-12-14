@@ -86,11 +86,11 @@ const authController = {
             );
 
             const transporter = nodemailer.createTransport({
-                host: 'smtp-relay.brevo.com',
-                port: '587',
+                host: 'smtp.gmail.com',
+                port: '465',
                 auth: {
-                    user: 'h5studiogl@gmail.com',
-                    pass: 'fScdnZ4WmEDqjBA1',
+                    user: 'thanhphongit217@gmail.com',
+                    pass: 'ktubfwktjlnkulgl',
                 },
             });
 
@@ -143,7 +143,7 @@ const authController = {
         }
     },
 
-    
+
     createNotification: async (req, res) => {
         try {
             const { title, content, role } = req.body;
@@ -161,17 +161,17 @@ const authController = {
 
             // Gửi thông báo đến tất cả người dùng có vai trò là "resident"
             const transporter = nodemailer.createTransport({
-                host: 'smtp-relay.brevo.com',
-                port: '587',
+                host: 'smtp.gmail.com',
+                port: '465',
                 auth: {
-                    user: 'h5studiogl@gmail.com',
-                    pass: 'fScdnZ4WmEDqjBA1',
+                    user: 'thanhphongit217@gmail.com',
+                    pass: 'ktubfwktjlnkulgl',
                 },
             });
 
 
             for (const user of userRows) {
-                
+
                 const mailOptions = {
                     from: 'coms@gmail.com',
                     to: user.email,
@@ -192,7 +192,7 @@ const authController = {
             res.status(500).json(err);
         }
     },
-   
+
 };
 
 module.exports = authController;

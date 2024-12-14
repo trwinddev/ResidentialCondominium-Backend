@@ -16,11 +16,11 @@ const notificationController = {
 
             // Gửi thông báo đến tất cả người dùng có vai trò là "resident"
             const transporter = nodemailer.createTransport({
-                host: 'smtp-relay.brevo.com',
-                port: '587',
+                host: 'smtp.gmail.com',
+                port: '465',
                 auth: {
-                    user: 'h5studiogl@gmail.com',
-                    pass: 'fScdnZ4WmEDqjBA1',
+                    user: 'thanhphongit217@gmail.com',
+                    pass: 'ktubfwktjlnkulgl',
                 },
             });
 
@@ -46,6 +46,20 @@ const notificationController = {
         } catch (err) {
             console.error(err);
             res.status(500).json(err);
+        }
+    },
+
+    searchNotificationByName: async (req, res) => {
+        const name = req.query.name;
+
+        try {
+            const query = 'SELECT * FROM notifications WHERE title LIKE ?';
+            const searchTerm = `%${name}%`;
+
+            const [notificationList] = await db.execute(query, [searchTerm]);
+            res.status(200).json({ data: notificationList });
+        } catch (err) {
+            res.status(500).json({ message: err.message });
         }
     },
 

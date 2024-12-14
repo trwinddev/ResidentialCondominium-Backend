@@ -1,7 +1,7 @@
 const db = require('../config/db');
 
 const assetEventController = {
-    // Ghi lịch sử mua tài sản
+    // Ghi lịch sử mua thiết bị
     purchaseAsset: async (req, res) => {
         try {
             const { asset_id, event_date, description, quantity } = req.body;
@@ -10,7 +10,7 @@ const assetEventController = {
             const query = 'INSERT INTO asset_event_history (asset_id, event_type, event_date, description, quantity) VALUES (?, ?, ?, ?, ?)';
             await db.execute(query, [asset_id, 'purchase', event_date, description, quantity]);
 
-            // Cập nhật số lượng tài sản trong bảng assets
+            // Cập nhật số lượng thiết bị trong bảng assets
             const updateQuery = 'UPDATE assets SET quantity = quantity + ? WHERE id = ?';
             await db.execute(updateQuery, [quantity, asset_id]);
 
@@ -20,7 +20,7 @@ const assetEventController = {
         }
     },
 
-    // Ghi lịch sử bán tài sản
+    // Ghi lịch sử bán thiết bị
     sellAsset: async (req, res) => {
         try {
             const { asset_id, event_date, description, quantity } = req.body;
@@ -38,7 +38,7 @@ const assetEventController = {
             const query = 'INSERT INTO asset_event_history (asset_id, event_type, event_date, description, quantity) VALUES (?, ?, ?, ?, ?)';
             await db.execute(query, [asset_id, 'sell', event_date, description, quantity]);
 
-            // Cập nhật số lượng tài sản trong bảng assets
+            // Cập nhật số lượng thiết bị trong bảng assets
             const updateQuery = 'UPDATE assets SET quantity = quantity - ? WHERE id = ?';
             await db.execute(updateQuery, [quantity, asset_id]);
 
@@ -48,7 +48,7 @@ const assetEventController = {
         }
     },
 
-    // Ghi lịch sử di chuyển tài sản
+    // Ghi lịch sử di chuyển thiết bị
     moveAsset: async (req, res) => {
         try {
             const { asset_id, event_date, description } = req.body;
@@ -57,7 +57,7 @@ const assetEventController = {
             const query = 'INSERT INTO asset_event_history (asset_id, event_type, event_date, description) VALUES (?, ?, ?, ?)';
             await db.execute(query, [asset_id, 'move', event_date, description]);
 
-            // Cập nhật mô tả tài sản trong bảng assets
+            // Cập nhật mô tả thiết bị trong bảng assets
             const updateQuery = 'UPDATE assets SET description = ? WHERE id = ?';
             await db.execute(updateQuery, [description, asset_id]);
 

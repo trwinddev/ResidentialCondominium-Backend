@@ -20,7 +20,7 @@ router.put('/:id', verifyToken.checkLogin, maintenancePlanController.updateMaint
 // Route để xóa kế hoạch bảo trì theo ID
 router.delete('/:id', verifyToken.checkLogin, maintenancePlanController.deleteMaintenancePlan);
 
-// Route để lấy tất cả kế hoạch bảo trì cho một tài sản cụ thể
+// Route để lấy tất cả kế hoạch bảo trì cho một thiết bị cụ thể
 router.get('/:assetId', verifyToken.checkLogin, maintenancePlanController.getMaintenancePlansForAsset);
 
 module.exports = router;

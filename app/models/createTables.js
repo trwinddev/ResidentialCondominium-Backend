@@ -14,7 +14,7 @@ const createTables = async () => {
                 password VARCHAR(255) NOT NULL,
                 role VARCHAR(255),
                 status VARCHAR(255) DEFAULT 'noactive',
-                image VARCHAR(255) DEFAULT 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+                image VARCHAR(255) DEFAULT 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             )
@@ -23,13 +23,26 @@ const createTables = async () => {
         console.log('Table "users" created or already exists.');
 
         // Tạo bảng "rooms" nếu chưa tồn tại
+        // await db.execute(`
+        //     CREATE TABLE IF NOT EXISTS rooms (
+        //         id INT AUTO_INCREMENT PRIMARY KEY,
+        //         name VARCHAR(255) NOT NULL,
+        //         type VARCHAR(255),
+        //         area FLOAT,
+        //         capacity INT,
+        //         status VARCHAR(255) DEFAULT 'available',
+        //         description TEXT,
+        //         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        //         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        //     )
+        // `);
+
         await db.execute(`
             CREATE TABLE IF NOT EXISTS rooms (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
                 type VARCHAR(255),
                 area FLOAT,
-                capacity INT,
                 status VARCHAR(255) DEFAULT 'available',
                 description TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -87,7 +100,7 @@ const createTables = async () => {
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
             description TEXT,
-            value DECIMAL(10, 2), 
+            value DECIMAL(10, 2),
             location VARCHAR(255),
             status VARCHAR(255),
             quantity INT,
@@ -161,7 +174,7 @@ const createTables = async () => {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         );
-        
+
       `);
 
         console.log('Table "vendors " created or already exists.');
@@ -471,7 +484,7 @@ const createTables = async () => {
         //   ADD FOREIGN KEY (created_by) REFERENCES users(id);
         //    `);
 
-           
+
 
 
 
