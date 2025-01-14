@@ -5,26 +5,26 @@ const complaintController = {
     submitComplaint: async (req, res) => {
         try {
             const { user_id, subject, description, assigned_to, created_by } = req.body;
-    
+
             // Check if user_id and created_by exist in the database
             const [userRows] = await db.execute('SELECT * FROM users WHERE id = ?', [user_id]);
             const [creatorRows] = await db.execute('SELECT * FROM users WHERE id = ?', [created_by]);
-    
+
             const user = userRows[0];
             const creator = creatorRows[0];
-    
+
             if (!user || !creator) {
                 return res.status(400).json({ message: 'User or creator not found', status: false });
             }
-    
+
             // Submit the complaint without checking assigned_to
             const [complaintRows] = await db.execute(
                 'INSERT INTO complaints (user_id, subject, description, status, progress, assigned_to, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [user_id, subject, description, 'pending', 0, assigned_to, created_by]
+                [user_id, subject, description, 'Đang chờ xử lý', 0, assigned_to, created_by]
             );
-    
+
             const complaintId = complaintRows.insertId;
-    
+
             res.status(201).json({ message: 'Complaint submitted successfully', status: true });
         } catch (err) {
             console.error(err);
@@ -92,10 +92,10 @@ const complaintController = {
     searchComplaintsBySubject: async (req, res) => {
         try {
             const { subject } = req.query;
-    
+
             const query = 'SELECT complaints.*, users.username AS user_name, users.email AS user_email, assigned_to_name, assigned_to_email FROM complaints INNER JOIN users ON complaints.user_id = users.id LEFT JOIN (SELECT id, username AS assigned_to_name, email AS assigned_to_email FROM users) AS assigned_users ON complaints.assigned_to = assigned_users.id WHERE complaints.subject LIKE ?';
             const [complaints] = await db.execute(query, [`%${subject}%`]);
-    
+
             res.status(200).json(complaints);
         } catch (err) {
             console.error(err);

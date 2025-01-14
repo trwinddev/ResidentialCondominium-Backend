@@ -217,7 +217,7 @@ const createTables = async () => {
             user_id INT,
             subject VARCHAR(255) NOT NULL,
             description TEXT,
-            status VARCHAR(255) DEFAULT 'pending',
+            status VARCHAR(255) DEFAULT 'Đang chờ xử lý',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(id)
@@ -376,7 +376,7 @@ const createTables = async () => {
             description TEXT,
             reported_by INT,
             reported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            status VARCHAR(255) DEFAULT 'reported',
+            status VARCHAR(255) DEFAULT 'Đang chờ xử lý',
             resolved_at TIMESTAMP,
             resolved_description TEXT,
             resolved_by INT,
@@ -446,7 +446,7 @@ const createTables = async () => {
             amount DECIMAL(10, 2) NOT NULL,
             allocation_date DATE NOT NULL,
             utilization_date DATE,
-            status VARCHAR(50) DEFAULT 'pending'
+            status VARCHAR(50) DEFAULT 'Đang chờ xử lý'
         )
         `);
 
@@ -472,7 +472,7 @@ const createTables = async () => {
 
         //  await db.execute(`
         //  ALTER TABLE complaints
-        //  ADD status VARCHAR(255) DEFAULT 'pending',
+        //  ADD status VARCHAR(255) DEFAULT 'Đang chờ xử lý',
         //  ADD progress INT DEFAULT 0,
         //  ADD assigned_to INT,
         //  ADD FOREIGN KEY (assigned_to) REFERENCES users(id)

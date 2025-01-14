@@ -10,14 +10,14 @@ const emergencyMaintenanceController = {
             res.status(500).json(err);
         }
     },
-    
+
     createEmergencyMaintenance: async (req, res) => {
         try {
             const { asset_id, description, reported_by } = req.body;
             const query = 'INSERT INTO emergency_maintenance (asset_id, description, reported_by, status) VALUES (?, ?, ?, ?)';
-            
-            const status = 'pending';
-    
+
+            const status = 'Đang chờ xử lý';
+
             const [result] = await db.execute(query, [asset_id, description, reported_by, status]);
             const maintenanceId = result.insertId;
             res.status(201).json({ id: maintenanceId, asset_id, description, reported_by, status });
@@ -31,9 +31,9 @@ const emergencyMaintenanceController = {
             const maintenanceId = req.params.id;
             const { resolved_description, resolved_by } = req.body;
             const query = 'UPDATE emergency_maintenance SET resolved_description = ?, resolved_by = ?, status = ?, resolved_at = CURRENT_TIMESTAMP WHERE id = ?';
-            
+
             const status = req.body.status;
-    
+
             await db.execute(query, [resolved_description, resolved_by, status, maintenanceId]);
             res.status(200).json({ message: 'Emergency maintenance resolved successfully' });
         } catch (err) {
@@ -89,8 +89,8 @@ const emergencyMaintenanceController = {
             res.status(500).json(err);
         }
     },
-    
-    
+
+
     searchEmergencyMaintenance: async (req, res) => {
         try {
             const { keyword } = req.query;
@@ -100,12 +100,12 @@ const emergencyMaintenanceController = {
                 LEFT JOIN assets a ON em.asset_id = a.id
                 LEFT JOIN users ur ON em.reported_by = ur.id
                 LEFT JOIN users ures ON em.resolved_by = ures.id
-                WHERE 
-                    em.description LIKE ? OR 
+                WHERE
+                    em.description LIKE ? OR
                     em.resolved_description LIKE ?
             `;
             const [result] = await db.execute(query, [`%${keyword}%`, `%${keyword}%`]);
-    
+
             res.status(200).json({ data: result });
         } catch (err) {
             res.status(500).json(err);
