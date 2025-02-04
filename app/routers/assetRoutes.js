@@ -24,5 +24,7 @@ router.post('/reports', verifyToken.checkLogin, reportController.createAssetRepo
 
 router.get('/:assetId/reports', verifyToken.checkLogin, reportController.getAssetReports);
 
+router.get('/expired', verifyToken.checkLogin, assetController.getAssetExpired);
+
 
 module.exports = router;

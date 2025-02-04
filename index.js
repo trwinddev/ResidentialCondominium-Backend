@@ -51,12 +51,14 @@ const accessCardRoutes = require("./app/routers/accessCardRoutes");
 const paymentRoute = require("./app/routers/paypal");
 const maintenanceFundsRoute = require("./app/routers/maintenanceFundsRoutes");
 const dashboardRouter = require("./app/routers/dashboardRouter");
+const assetExpiredRoutes = require("./app/routers/assetExpiredRoutes");
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 app.use("/api/room", roomRoute);
 app.use("/api/assetCategory", assetCategoryRoute);
 app.use("/api/assets", assetsRoute);
+app.use("/api/expired", assetExpiredRoutes);
 app.use("/api/events", eventsRoute);
 app.use("/api/maintenance-plans", maintenancePlanRoute);
 app.use("/api/vendors", vendorsRoute);

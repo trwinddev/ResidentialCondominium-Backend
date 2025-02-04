@@ -12,21 +12,38 @@ const assetController = {
         }
     },
 
+    getAssetExpired: async (req, res) => {
+        try {
+            const query = `
+                SELECT DISTINCT a.*
+                FROM assets a
+                INNER JOIN maintenance_plans mp ON a.id = mp.asset_id
+                WHERE mp.start_date >= CURDATE()
+                AND mp.start_date <= DATE_ADD(CURDATE(), INTERVAL 3 DAY)
+                AND mp.end_date >= CURDATE()`;
+
+            const [assets] = await db.execute(query);
+            res.status(200).json({ data: assets });
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
+
     createAsset: async (req, res) => {
         try {
             const { name, description, value, location, status, categoryId, quantity, image } = req.body;
-    
+
             // Kiểm tra xem tên đã tồn tại chưa
             const checkQuery = 'SELECT id FROM assets WHERE name = ?';
             const [existingAsset] = await db.execute(checkQuery, [name]);
-    
+
             if (existingAsset.length > 0) {
                 return res.status(200).json({ message: 'Asset with the same name already exists' });
             }
-    
+
             const query = 'INSERT INTO assets (name, description, value, location, status, category_id, quantity, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
             const [result] = await db.execute(query, [name, description, value, location, status, categoryId, quantity, image]);
-    
+
             const assetId = result.insertId;
             res.status(201).json({
                 id: assetId,
@@ -48,20 +65,20 @@ const assetController = {
         try {
             const assetId = req.params.id;
             const { name, description, value, location, status, categoryId, image } = req.body;
-    
+
             // Kiểm tra xem tên đã tồn tại chưa (nếu tên được cập nhật)
             if (name) {
                 const checkQuery = 'SELECT id FROM assets WHERE name = ? AND id != ?';
                 const [existingAsset] = await db.execute(checkQuery, [name, assetId]);
-    
+
                 if (existingAsset.length > 0) {
                     return res.status(200).json({ message: 'Asset with the same name already exists' });
                 }
             }
-    
+
             let query;
             let params;
-    
+
             if (image) {
                 // If image is provided, update including image
                 query = 'UPDATE assets SET name = ?, description = ?, value = ?, location = ?, status = ?, category_id = ?, image = ? WHERE id = ?';
@@ -71,7 +88,7 @@ const assetController = {
                 query = 'UPDATE assets SET name = ?, description = ?, value = ?, location = ?, status = ?, category_id = ? WHERE id = ?';
                 params = [name, description, value, location, status, categoryId, assetId];
             }
-    
+
             await db.execute(query, params);
             res.status(200).json({ message: 'Asset updated successfully' });
         } catch (err) {
