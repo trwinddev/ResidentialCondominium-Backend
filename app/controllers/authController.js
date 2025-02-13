@@ -98,7 +98,7 @@ const authController = {
                 from: 'coms@gmail.com',
                 to: user.email,
                 subject: 'Reset Password',
-                text: `To reset your password, click on the following link: http://localhost:3000/reset-password/${token}`,
+                text: `Để thay đổi mật khẩu, vui lòng click vào đường link: http://localhost:3000/reset-password/${token}`,
             };
 
             transporter.sendMail(mailOptions, (error, info) => {
