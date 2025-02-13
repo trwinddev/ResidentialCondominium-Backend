@@ -31,4 +31,10 @@ router.post('/events', residentEventsController.recordEvent);
 // Đăng ký tham gia cuộc họp
 router.post('/register', residentEventsController.registerForMeeting);
 
+// Sửa thông tin của một cuộc họp
+router.put('/:meetingId', residentEventsController.updateMeeting);
+
+// Xóa cuộc họp
+router.delete('/:meetingId', residentEventsController.deleteMeeting);
+
 module.exports = router;

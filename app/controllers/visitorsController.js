@@ -4,7 +4,7 @@ const visitorsController = {
     // Lấy tất cả thông tin về khách hàng
     getAllVisitors: async (req, res) => {
         try {
-            const [visitors] = await db.execute('SELECT * FROM visitors');
+            const [visitors] = await db.execute('SELECT * FROM visitors ORDER BY created_at DESC');
             res.status(200).json(visitors);
         } catch (err) {
             console.error(err);
@@ -15,9 +15,9 @@ const visitorsController = {
     // Thêm một khách hàng mới
     addVisitor: async (req, res) => {
         try {
-            const { name, email, phone, entryDate, reasonToVisit, citizenId } = req.body;
-            const query = 'INSERT INTO visitors (name, email, phone, entryDate, reasonToVisit, citizenId) VALUES (?, ?, ?, ?, ?, ?)';
-            await db.execute(query, [name, email, phone, entryDate, reasonToVisit, citizenId]);
+            const { name, email, phone, entryDate, reasonToVisit, address } = req.body;
+            const query = 'INSERT INTO visitors (name, email, phone, entryDate, reasonToVisit, address) VALUES (?, ?, ?, ?, ?, ?)';
+            await db.execute(query, [name, email, phone, entryDate, reasonToVisit, address]);
             res.status(201).json({ message: 'Visitor added successfully', status: true });
         } catch (err) {
             console.error(err);
@@ -29,9 +29,9 @@ const visitorsController = {
     updateVisitor: async (req, res) => {
         try {
             const { visitorId } = req.params;
-            const { name, email, phone, entryDate, reasonToVisit, citizenId } = req.body;
-            const query = 'UPDATE visitors SET name = ?, email = ?, phone = ?, entryDate = ?, reasonToVisit = ?, citizenId = ? WHERE id = ?';
-            await db.execute(query, [name, email, phone, entryDate, reasonToVisit, citizenId, visitorId]);
+            const { name, email, phone, entryDate, reasonToVisit, address } = req.body;
+            const query = 'UPDATE visitors SET name = ?, email = ?, phone = ?, entryDate = ?, reasonToVisit = ?, address = ? WHERE id = ?';
+            await db.execute(query, [name, email, phone, entryDate, reasonToVisit, address, visitorId]);
             res.status(200).json({ message: 'Visitor updated successfully', status: true });
         } catch (err) {
             console.error(err);
@@ -78,7 +78,7 @@ const visitorsController = {
             let params;
 
             if (keyword) {
-                // Use OR to search across multiple columns (name, email, phone, entryDate, reasonToVisit, citizenId)
+                // Use OR to search across multiple columns (name, email, phone, entryDate, reasonToVisit, address)
                 query = `
                 SELECT * FROM visitors
                 WHERE name LIKE ? OR
@@ -86,7 +86,7 @@ const visitorsController = {
                       phone LIKE ? OR
                       entryDate LIKE ? OR
                       reasonToVisit LIKE ? OR
-                      citizenId LIKE ?
+                      address LIKE ?
             `;
                 params = Array(6).fill(`%${keyword}%`);
             } else {

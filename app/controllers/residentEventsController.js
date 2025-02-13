@@ -72,6 +72,32 @@ const residentEventsController = {
         }
     },
 
+    updateMeeting: async (req, res) => {
+        try {
+            const { meetingId } = req.params;
+            const { title, date, description, location } = req.body;
+            const query = 'UPDATE meetings SET title = ?, date = ?, description = ?, location = ? WHERE id = ?';
+            await db.execute(query, [title, date, description, location, meetingId]);
+            res.status(200).json({ message: 'Meeting updated successfully', status: true });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json(err);
+        }
+    },
+
+    // Xóa thông tin của một cuộc họp
+    deleteMeeting: async (req, res) => {
+        try {
+            const { meetingId } = req.params;
+            const query = 'DELETE FROM meetings WHERE id = ?';
+            await db.execute(query, [meetingId]);
+            res.status(200).json({ message: 'Meeting deleted successfully', status: true });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json(err);
+        }
+    },
+
     recordEvent: async (req, res) => {
         try {
             // Lấy thông tin sự kiện từ req.body
@@ -209,7 +235,7 @@ const residentEventsController = {
     getAllMeetings: async (req, res) => {
         try {
             // Truy vấn tất cả cuộc họp
-            const [meetings] = await db.execute('SELECT * FROM meetings');
+            const [meetings] = await db.execute('SELECT * FROM meetings ORDER BY created_at DESC');
             res.status(200).json(meetings);
         } catch (err) {
             console.error(err);

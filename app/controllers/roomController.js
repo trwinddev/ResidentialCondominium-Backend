@@ -43,7 +43,7 @@ const roomController = {
   getAllRooms: async (req, res) => {
     try {
       // const roomsQuery = 'SELECT rooms.id, rooms.name, rooms.type, rooms.area, rooms.capacity, rooms.status, rooms.description FROM rooms';
-      const roomsQuery = 'SELECT rooms.id, rooms.name, rooms.type, rooms.area, rooms.status, rooms.description FROM rooms';
+      const roomsQuery = 'SELECT rooms.id, rooms.name, rooms.type, rooms.area, rooms.status, rooms.description FROM rooms ORDER BY created_at DESC';
       const [rooms] = await db.execute(roomsQuery);
 
       for (const room of rooms) {

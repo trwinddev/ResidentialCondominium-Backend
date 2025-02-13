@@ -85,6 +85,7 @@ const maintenanceHistoryController = {
                 SELECT mh.*, mp.plan_description
                 FROM maintenance_history mh
                 JOIN maintenance_plans mp ON mh.plan_id = mp.id
+                ORDER BY mh.created_at DESC
             `;
             const [maintenanceRecords] = await db.execute(query);
             res.status(200).json({ data: maintenanceRecords });

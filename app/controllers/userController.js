@@ -10,7 +10,7 @@ const userController = {
         const offset = (page - 1) * limit;
 
         try {
-            const query = `SELECT * FROM users LIMIT ${offset}, ${limit}`;
+            const query = `SELECT * FROM users ORDER BY created_at LIMIT ${offset}, ${limit}`;
 
             const [users] = await db.execute(query);
             res.status(200).json({ data: users });

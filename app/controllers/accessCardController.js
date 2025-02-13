@@ -3,7 +3,7 @@ const db = require('../config/db');
 const accessCardController = {
     getAllAccessCards: async (req, res) => {
         try {
-            const query = 'SELECT * FROM access_cards';
+            const query = 'SELECT * FROM access_cards ORDER BY created_at';
             const [accessCards] = await db.execute(query);
             res.status(200).json(accessCards);
         } catch (err) {
@@ -65,13 +65,13 @@ const accessCardController = {
             res.status(500).json(err);
         }
     },
- 
+
     searchAccessCards: async (req, res) => {
         try {
             const { query } = req.query;
             const searchQuery = 'SELECT * FROM access_cards WHERE card_number LIKE ?';
             const [result] = await db.execute(searchQuery, [`%${query}%`]);
-    
+
             res.status(200).json(result);
         } catch (err) {
             console.error(err);

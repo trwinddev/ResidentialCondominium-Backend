@@ -248,7 +248,7 @@ const createTables = async () => {
                 phone VARCHAR(255),
                 entryDate DATETIME,
                 reasonToVisit TEXT,
-                citizenId VARCHAR(255),
+                address VARCHAR(255),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             )

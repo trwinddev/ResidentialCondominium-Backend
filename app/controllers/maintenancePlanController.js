@@ -75,6 +75,7 @@ const maintenancePlanController = {
                 SELECT mp.*, a.name AS asset_name
                 FROM maintenance_plans mp
                 JOIN assets a ON mp.asset_id = a.id
+                ORDER BY mp.created_at DESC
             `;
             const [maintenancePlans] = await db.execute(query);
             res.status(200).json({ data: maintenancePlans });
@@ -98,7 +99,7 @@ const maintenancePlanController = {
             res.status(500).json(err);
         }
     },
-    
+
 
     getMaintenancePlanById: async (req, res) => {
         try {

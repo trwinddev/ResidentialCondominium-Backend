@@ -4,7 +4,7 @@ const db = require('../config/db');
 const assetController = {
     getAllAssets: async (req, res) => {
         try {
-            const query = 'SELECT assets.*, asset_categories.name AS category_name FROM assets LEFT JOIN asset_categories ON assets.category_id = asset_categories.id';
+            const query = 'SELECT assets.*, asset_categories.name AS category_name FROM assets LEFT JOIN asset_categories ON assets.category_id = asset_categories.id ORDER BY assets.created_at DESC';
             const [assets] = await db.execute(query);
             res.status(200).json({ data: assets });
         } catch (err) {
@@ -15,12 +15,13 @@ const assetController = {
     getAssetExpired: async (req, res) => {
         try {
             const query = `
-                SELECT DISTINCT a.*
+                SELECT DISTINCT a.*, mp.start_date as maintenance_start_date
                 FROM assets a
                 INNER JOIN maintenance_plans mp ON a.id = mp.asset_id
                 WHERE mp.start_date >= CURDATE()
                 AND mp.start_date <= DATE_ADD(CURDATE(), INTERVAL 3 DAY)
-                AND mp.end_date >= CURDATE()`;
+                AND mp.end_date >= CURDATE()
+                AND a.status IN ('Đang sử dụng', 'Bảo trì')`;
 
             const [assets] = await db.execute(query);
             res.status(200).json({ data: assets });

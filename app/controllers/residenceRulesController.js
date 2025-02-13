@@ -4,7 +4,7 @@ const residenceRulesController = {
   // Lấy danh sách tất cả Quy định Cư trú
   getAllResidenceRules: async (req, res) => {
     try {
-      const [rules] = await db.execute('SELECT * FROM residence_rules');
+      const [rules] = await db.execute('SELECT * FROM residence_rules ORDER BY created_at DESC');
       res.status(200).json(rules);
     } catch (err) {
       console.error(err);

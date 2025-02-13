@@ -48,7 +48,7 @@ const vendorController = {
 
     getAllVendors: async (req, res) => {
         try {
-            const query = 'SELECT * FROM vendors';
+            const query = 'SELECT * FROM vendors ORDER BY created_at DESC';
             const [vendors] = await db.execute(query);
             res.status(200).json({ data: vendors });
         } catch (err) {
@@ -78,7 +78,7 @@ const vendorController = {
 
             // You can customize the query based on your search requirements
             const query = `
-                SELECT * FROM vendors 
+                SELECT * FROM vendors
                 WHERE name LIKE ? OR email LIKE ? OR phone LIKE ? OR address LIKE ?
             `;
             const [vendors] = await db.execute(query, [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`]);

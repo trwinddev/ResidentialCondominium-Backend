@@ -3,7 +3,7 @@ const db = require('../config/db');
 const assetCategoryController = {
     getAllAssetCategories: async (req, res) => {
         try {
-            const query = 'SELECT * FROM asset_categories';
+            const query = 'SELECT * FROM asset_categories ORDER BY created_at DESC';
             const [assetCategories] = await db.execute(query);
 
             res.status(200).json({ data: assetCategories });

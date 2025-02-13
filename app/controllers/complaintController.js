@@ -35,7 +35,7 @@ const complaintController = {
     // Lấy tất cả thông tin về khiếu nại
     getAllComplaints: async (req, res) => {
         try {
-            const query = 'SELECT complaints.*, users.username AS user_name, users.email AS user_email, users.role AS user_role, assigned_users.username AS assigned_to_name, assigned_users.email AS assigned_to_email, assigned_users.role AS assigned_to_role FROM complaints INNER JOIN users ON complaints.user_id = users.id LEFT JOIN (SELECT id, username, email, role FROM users) AS assigned_users ON complaints.assigned_to = assigned_users.id';
+            const query = 'SELECT complaints.*, users.username AS user_name, users.email AS user_email, users.role AS user_role, assigned_users.username AS assigned_to_name, assigned_users.email AS assigned_to_email, assigned_users.role AS assigned_to_role FROM complaints INNER JOIN users ON complaints.user_id = users.id LEFT JOIN (SELECT id, username, email, role FROM users) AS assigned_users ON complaints.assigned_to = assigned_users.id ORDER BY complaints.created_at DESC';
             const [complaints] = await db.execute(query);
             res.status(200).json(complaints);
         } catch (err) {

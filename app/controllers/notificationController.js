@@ -81,10 +81,22 @@ const notificationController = {
     getAllNotifications: async (req, res) => {
         try {
             // Truy vấn tất cả thông báo từ cơ sở dữ liệu
-            const [notificationRows] = await db.execute('SELECT * FROM notifications');
+            const [notificationRows] = await db.execute('SELECT * FROM notifications ORDER BY created_at DESC');
 
             // Trả về danh sách thông báo
             res.status(200).json(notificationRows);
+        } catch (err) {
+            console.error(err);
+            res.status(500).json(err);
+        }
+    },
+
+    deleteNotification: async (req, res) => {
+        try {
+            const { notificationId } = req.params;
+            const query = 'DELETE FROM notifications WHERE id = ?';
+            await db.execute(query, [notificationId]);
+            res.status(200).json({ message: 'Notification deleted successfully', status: true });
         } catch (err) {
             console.error(err);
             res.status(500).json(err);

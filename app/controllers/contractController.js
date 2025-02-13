@@ -44,6 +44,7 @@ const contractController = {
                 SELECT contracts.*, vendors.name AS vendor_name
                 FROM contracts
                 LEFT JOIN vendors ON contracts.vendor_id = vendors.id
+                ORDER BY contracts.created_at DESC
             `;
             const [contracts] = await db.execute(query);
             res.status(200).json({ data: contracts });
@@ -71,16 +72,16 @@ const contractController = {
     searchContracts: async (req, res) => {
         try {
             const { keyword } = req.query;
-    
+
             let conditions = [];
             let params = [];
-    
+
             if (keyword) {
                 conditions.push('(contracts.title LIKE ? OR vendors.name LIKE ?)');
                 params.push(`%${keyword}%`);
                 params.push(`%${keyword}%`);
             }
-    
+
             let conditionStr = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
             const query = `
                 SELECT contracts.*, vendors.name AS vendor_name
@@ -89,14 +90,14 @@ const contractController = {
                 ${conditionStr}
             `;
             const [contracts] = await db.execute(query, params);
-    
+
             res.status(200).json({ data: contracts });
         } catch (err) {
             res.status(500).json(err);
         }
     },
-    
-    
+
+
 };
 
 module.exports = contractController;
